@@ -24,7 +24,7 @@ const config = {
     port: 3000,
   },
   resolve: {
-    extensions: ['.js', '.vue'],
+    extensions: ['.js', '.vue', '.jsx'],
     alias: {
       '@styles': `${srcPath}/assets/styles`,
       '@scripts': `${srcPath}/assets/scripts`,
@@ -36,6 +36,15 @@ const config = {
         //vueのloader設定
         test: /\.vue$/,
         loader: 'vue-loader',
+      },
+      {
+        test: /\.(js|jsx)$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/react'],
+          },
+        },
       },
       {
         // css, scssのloader設定
