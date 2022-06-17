@@ -1,8 +1,17 @@
 console.log('test');
 
 import { createApp } from '@vue/runtime-dom';
-import App from '@scripts/vue/App.vue';
+import VueApp from '@scripts/vue/App.vue';
 
-const app = createApp(App);
+const vueApp = createApp(VueApp);
 
-app.mount('#app');
+vueApp.mount('#vue-app');
+
+import React from 'react';
+import { createRoot} from 'react-dom/client';
+import ReactApp from '@scripts/react/App.jsx';
+
+const container = document.getElementById('react-app');
+const reactRoot = createRoot(container);
+
+reactRoot.render(<ReactApp />);

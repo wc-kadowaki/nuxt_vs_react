@@ -18,7 +18,11 @@
   },
   "homepage": "https://github.com/wc-kadowaki/nuxt_vs_react#readme",
   "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
     "@vue/compiler-sfc": "^3.2.37",
+    "babel-loader": "^8.2.5",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
     "html-webpack-plugin": "^5.5.0",
@@ -31,6 +35,10 @@
     "webpack-dev-server": "^4.9.2"
   },
   "dependencies": {
+    "@types/react": "^18.0.14",
+    "@types/react-dom": "^18.0.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "vue": "^3.2.36"
   }
 }
