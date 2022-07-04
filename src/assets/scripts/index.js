@@ -1,5 +1,3 @@
-console.log('test');
-
 import { createApp } from '@vue/runtime-dom';
 import VueApp from '@scripts/vue/App.vue';
 
