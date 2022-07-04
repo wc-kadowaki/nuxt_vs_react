@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, createContext } from 'react';
 import ReactTest from './components/reactTest';
+
+export const UserContext = createContext();
 
 const App = () => {
   //useState
@@ -37,10 +39,17 @@ const App = () => {
     }
   }, [count]);
 
+  // context( useContext, createContext )
+  // createContextはconst Appの外で定義する
+  const [user, setUser] = useState({
+    name: 'john doe',
+    age: '20',
+    job: 'police'
+  });
+
   return (
     <div>
       React App file
-      <ReactTest />
       <div>{array.join(', ')}</div>
       <input ref={textRef} type="text" />
       <button type="button" onClick={() => addArray(textRef.current.value)}>
@@ -55,6 +64,12 @@ const App = () => {
       </div>
       <div>{count}</div>
       <div>{FizzBuzz}</div>
+      <div>
+        <UserContext.Provider value={user}>
+          <ReactTest />
+        </UserContext.Provider>
+      </div>
+      <button type='button' onClick={() => setUser({...user, job: 'firefighter' })}>Job Change for Firefighter</button>
     </div>
   );
 };
