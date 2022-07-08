@@ -9,6 +9,35 @@ const App = () => {
   const [array, setArray] = useState(['dog', 'cat']);
   const [FizzBuzz, setFizzBuzz] = useState('FizzBuzz Counter');
 
+  const [target, setJudge] = useState(false);
+
+  const options = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0,
+  };
+
+  useEffect(() => {
+    console.log(target);
+  }, [target]);
+
+  const observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        setJudge(true);
+      } else {
+        setJudge(false);
+        return;
+      }
+    });
+  }, options);
+
+  useEffect(() => {
+    const targetElements = document.querySelector('.observer');
+    console.log(targetElements);
+    observer.observe(targetElements);
+  }, []);
+
   const textRef = useRef(null);
 
   const addArray = (item) => {
@@ -44,7 +73,7 @@ const App = () => {
   const [user, setUser] = useState({
     name: 'john doe',
     age: '20',
-    job: 'police'
+    job: 'police',
   });
 
   return (
@@ -69,7 +98,12 @@ const App = () => {
           <ReactTest />
         </UserContext.Provider>
       </div>
-      <button type='button' onClick={() => setUser({...user, job: 'firefighter' })}>Job Change for Firefighter</button>
+      <button type="button" onClick={() => setUser({ ...user, job: 'firefighter' })}>
+        Job Change for Firefighter
+      </button>
+      <div className="observer" style={{ margin: '1000px 0' }}>
+        この要素
+      </div>
     </div>
   );
 };
