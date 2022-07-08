@@ -1,11 +1,9 @@
 <template>
   <div>
-    テストのコンポーネント
+    {{ testText }}
   </div>
 </template>
 
-<script>
-export default {
-  name: "VueTest",
-}
+<script setup>
+const testText = 'test';
 </script>
