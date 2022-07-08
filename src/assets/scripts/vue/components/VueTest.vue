@@ -1,9 +1,9 @@
 <template>
   <div>
-    {{ testText }}
+    <VueTest2 />
   </div>
 </template>
 
 <script setup>
-const testText = 'test';
+import VueTest2 from './VueTest2.vue';
 </script>

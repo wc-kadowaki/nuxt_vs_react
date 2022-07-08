@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, provide } from "vue";
 import VueTest from "./components/VueTest";
 
 const text = ref('world');
@@ -29,6 +29,8 @@ const countUp = () => {
   refObject.otherCount = refObject.otherCount * 2;
   console.log(refObject);
 }
+
+provide('bar', 'bar');
 
 const hoge = () => {
   text.value = 'japan';
