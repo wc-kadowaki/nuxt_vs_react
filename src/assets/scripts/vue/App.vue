@@ -8,10 +8,13 @@
     <button @click="count++; foo();">ボタン</button>{{ count }}
   </div>
   <VueTest />
+  <div>
+    <button @click="barTest();">ボタン</button>
+  </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, provide } from "vue";
+import { onMounted, reactive, ref, provide, readonly } from "vue";
 import VueTest from "./components/VueTest";
 
 const text = ref('world');
@@ -30,7 +33,18 @@ const countUp = () => {
   console.log(refObject);
 }
 
-provide('bar', 'bar');
+const provideObject = reactive({
+  bar: 'text',
+  bar2: 'text2',
+  bar3: 'text3',
+});
+
+const barTest = () => {
+  provideObject.bar = 'update text';
+}
+
+//コンポーネント側で値を変更されたくない場合はreadonlyで渡すことで制限できる
+provide('bar', readonly(provideObject));
 
 const hoge = () => {
   text.value = 'japan';
