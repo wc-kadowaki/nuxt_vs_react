@@ -1,9 +1,9 @@
 <template>
   <div>
-    <VueTest2 />
+    <InjectTest />
   </div>
 </template>
 
 <script setup>
-import VueTest2 from './VueTest2.vue';
+import InjectTest from './InjectTest.vue';
 </script>
