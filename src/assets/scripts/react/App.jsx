@@ -18,7 +18,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    console.log(target);
   }, [target]);
 
   const observer = new IntersectionObserver(function (entries) {
@@ -34,7 +33,6 @@ const App = () => {
 
   useEffect(() => {
     const targetElements = document.querySelector('.observer');
-    console.log(targetElements);
     observer.observe(targetElements);
   }, []);
 
@@ -44,7 +42,6 @@ const App = () => {
     const temporaryArray = array;
     temporaryArray.push(item);
     setArray(temporaryArray);
-    console.log(array);
   };
   const addArrayVisibility = (item) => {
     setArray([...array, item]);
