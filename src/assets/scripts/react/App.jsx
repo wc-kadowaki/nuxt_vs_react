@@ -142,7 +142,7 @@ const App = () => {
         data.push(weatherObject);
       }
       const weatherDataList = data.map((dailyWeather) =>
-        <li>
+        <li key={dailyWeather.time}>
           <div>日にち：{dailyWeather.time}</div>
           <div>最高気温：{dailyWeather.temperature_2m_max}</div>
           <div>最低気温：{dailyWeather.temperature_2m_min}</div>
