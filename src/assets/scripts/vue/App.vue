@@ -30,7 +30,6 @@ const refObject = reactive({ count: 0, otherCount: 1 }); // Proxyオブジェク
 const countUp = () => {
   refObject.count = refObject.count + 1;
   refObject.otherCount = refObject.otherCount * 2;
-  console.log(refObject);
 }
 
 const provideObject = reactive({
