@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect, createContext } from 'react';
+import axios from 'axios';
+import React, { useState, useRef, useEffect, createContext, useReducer } from 'react';
 import ReactTest from './components/reactTest';
+import { weatherCode } from '@scripts/weather-code';
 
 export const UserContext = createContext();
 
@@ -76,6 +78,99 @@ const App = () => {
     job: 'police',
   });
 
+  // useReducer
+  const initialState = {
+    isLoading: true,
+    post: {},
+    isError: '',
+  };
+  const reduceFunction = (dataState, action) => {
+    switch (action.type) {
+      case 'FETCH_SUCCESS':
+        return {
+          isLoading: false,
+          post: action.payload,
+          isError: '',
+        };
+      case 'FETCH_ERROR':
+        return {
+          isLoading: false,
+          post: {},
+          isError: '読み込みに失敗しました',
+        };
+      default:
+        return dataState;
+    }
+  };
+  const weatherApiUrl = 'https://api.open-meteo.com/v1/forecast?latitude=35.6785&longitude=139.6823&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo';
+  const [dataState, dispatch] = useReducer(reduceFunction, initialState);
+  const requireWeather = () => {
+    axios
+      .get(weatherApiUrl)
+      .then((response) => {
+        dispatch({
+          type: 'FETCH_SUCCESS',
+          payload: response.data,
+        });
+      })
+      .catch(() => {
+        dispatch({
+          type: 'FETCH_ERROR',
+        });
+      });
+  };
+  useEffect(() => {
+    requireWeather();
+  }, []);
+
+  const loading = () => {
+    if (dataState.isLoading) {
+      return <div>読み込み中</div>;
+    } else {
+      return <div>読み込み完了</div>;
+    }
+  };
+  const loadingElement = loading();
+
+  const weatherData = () => {
+    if (!dataState.isLoading && dataState.isError === '') {
+      const data = [];
+      for (let i = 0; i < dataState.post.daily.time.length; i++) {
+        const weatherObject = {
+          time: dataState.post.daily.time[i],
+          temperature_2m_max: dataState.post.daily.temperature_2m_max[i],
+          temperature_2m_min: dataState.post.daily.temperature_2m_min[i],
+          weathercode: weatherCode[dataState.post.daily.weathercode[i]],
+        }
+        data.push(weatherObject);
+      }
+      const weatherDataList = data.map((dailyWeather) =>
+        <li>
+          <div>日にち：{dailyWeather.time}</div>
+          <div>最高気温：{dailyWeather.temperature_2m_max}</div>
+          <div>最低気温：{dailyWeather.temperature_2m_min}</div>
+          <div>天気：{dailyWeather.weathercode}</div>
+        </li>
+      )
+      console.log(weatherDataList);
+      return (
+        <div>
+          <div>データ取得できた時の表示</div>
+          <ul>{weatherDataList}</ul>
+        </div>
+      );
+    } else if (dataState.isLoading && dataState.isError === '') {
+      return <div>データ取得中の表示(初期表示)</div>;
+    } else {
+      return <div>データ取得できなかった時の表示{dataState.isError}</div>;
+    }
+  };
+  const [weatherState, setWeatherElement] = useState(weatherData);
+  useEffect(() => {
+    setWeatherElement(weatherData());
+    console.log(dataState);
+  }, [dataState]);
+
   return (
     <div>
       React App file
@@ -101,6 +196,8 @@ const App = () => {
       <button type="button" onClick={() => setUser({ ...user, job: 'firefighter' })}>
         Job Change for Firefighter
       </button>
+      <div>{loadingElement}</div>
+      <div>{weatherState}</div>
       <div className="observer" style={{ margin: '1000px 0' }}>
         この要素
       </div>
