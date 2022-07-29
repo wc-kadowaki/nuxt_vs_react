@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useRef, useEffect, createContext, useReducer } from 'react';
+import React, { useState, useRef, useEffect, createContext, useReducer, useCallback } from 'react';
 import ReactTest from './components/reactTest';
 import { weatherCode } from '@scripts/weather-code';
 
@@ -19,8 +19,7 @@ const App = () => {
     threshold: 0,
   };
 
-  useEffect(() => {
-  }, [target]);
+  useEffect(() => {}, [target]);
 
   const observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
@@ -138,17 +137,17 @@ const App = () => {
           temperature_2m_max: dataState.post.daily.temperature_2m_max[i],
           temperature_2m_min: dataState.post.daily.temperature_2m_min[i],
           weathercode: weatherCode[dataState.post.daily.weathercode[i]],
-        }
+        };
         data.push(weatherObject);
       }
-      const weatherDataList = data.map((dailyWeather) =>
+      const weatherDataList = data.map((dailyWeather) => (
         <li key={dailyWeather.time}>
           <div>日にち：{dailyWeather.time}</div>
           <div>最高気温：{dailyWeather.temperature_2m_max}</div>
           <div>最低気温：{dailyWeather.temperature_2m_min}</div>
           <div>天気：{dailyWeather.weathercode}</div>
         </li>
-      )
+      ));
       console.log(weatherDataList);
       return (
         <div>
@@ -168,9 +167,62 @@ const App = () => {
     console.log(dataState);
   }, [dataState]);
 
+  // useCallback, useMemo, React.memo
+  // 全てパフォーマンスの向上に関わるもので
+  // React.memoはコンポーネントをメモ化する
+  // useCallbackは関数をメモ化する
+  // useMemoは関数の返り値をメモ化する
+  // React.memoで子コンポーネントをメモ化した際にpropsで関数を引数にする場合渡す関数にuseCallbackを使用しないと
+  // 親コンポーネントが再レンダリングされた際に同じ処理でも別の関数と判定されてしまうため子コンポーネントでReact.memoを使用していても際レンダリングされてしまう
+  // これって関数だけなのか？propsで変数を渡して見た場合も際レンダリングされるのか？
+
+  const Child = React.memo(({ buttonClick }) => {
+    console.log('子コンポーネント');
+    return (
+      <div>
+        <div>子コンポーネント</div>
+        <button onClick={buttonClick}>ボタン</button>
+      </div>
+    );
+  });
+
+  const Child2 = React.memo(({ buttonClick }) => {
+    console.log('子コンポーネント2');
+    return (
+      <div>
+        <div>子コンポーネント2</div>
+        <button onClick={buttonClick}></button>
+      </div>
+    );
+  });
+
+  const Parent = () => {
+    console.log('親コンポーネント');
+    const [renderCountState, setRenderCount] = useState(0);
+    const countUp = () => {
+      setRenderCount(renderCountState + 1);
+    };
+    // buttonClickの引数countUpだけでいいと思ったら何故かループ入る、、
+    return (
+      <div>
+        <div>親コンポーネント</div>
+        <div>{renderCountState}</div>
+        <Child
+          buttonClick={useCallback(() => {
+            countUp();
+          })}
+        />
+        <Child2
+          buttonClick={useCallback(() => {
+            console.log('test');
+          })}
+        />
+      </div>
+    );
+  };
+
   return (
     <div>
-      React App file
       <div>{array.join(', ')}</div>
       <input ref={textRef} type="text" />
       <button type="button" onClick={() => addArray(textRef.current.value)}>
@@ -195,6 +247,7 @@ const App = () => {
       </button>
       <div>{loadingElement}</div>
       <div>{weatherState}</div>
+      <Parent />
       <div className="observer" style={{ margin: '1000px 0' }}>
         この要素
       </div>
