@@ -1,27 +1,30 @@
 {
-  "rules": {
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
-  },
   "env": {
-    "es6": true,
+    "es2022": true,
     "browser": true
   },
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 13,
     "sourceType": "module"
   },
   "plugins": [
-    "react-hooks"
+    "react",
+    "react-hooks",
+    "vue"
   ],
   "extends": [
     "eslint:recommended",
-    "plugin:vue/vue3-recommended",
+    "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:prettier"
+    "plugin:vue/vue3-recommended",
+    "prettier"
   ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
+  },
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }

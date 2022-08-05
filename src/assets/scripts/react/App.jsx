@@ -176,7 +176,7 @@ const App = () => {
   // 親コンポーネントが再レンダリングされた際に同じ処理でも別の関数と判定されてしまうため子コンポーネントでReact.memoを使用していても際レンダリングされてしまう
   // これって関数だけなのか？propsで変数を渡して見た場合も際レンダリングされるのか？
 
-  const Child = React.memo(({ buttonClick }) => {
+  const Child = new React.memo(({ buttonClick }) => {
     console.log('子コンポーネント');
     return (
       <div>
@@ -186,7 +186,7 @@ const App = () => {
     );
   });
 
-  const Child2 = React.memo(({ buttonClick }) => {
+  const Child2 = new React.memo(({ buttonClick }) => {
     console.log('子コンポーネント2');
     return (
       <div>
@@ -202,27 +202,50 @@ const App = () => {
     const countUp = () => {
       setRenderCount(renderCountState + 1);
     };
+    const hoge = 1;
+    const hoge2 = 2;
+    const sampleFunc = useCallback(() => {
+      console.log(hoge + hoge2);
+    }, [hoge, hoge2]);
     // buttonClickの引数countUpだけでいいと思ったら何故かループ入る、、
     return (
       <div>
         <div>親コンポーネント</div>
         <div>{renderCountState}</div>
-        <Child
-          buttonClick={useCallback(() => {
-            countUp();
-          })}
-        />
+        <Child buttonClick={sampleFunc} />
         <Child2
           buttonClick={useCallback(() => {
-            console.log('test');
+            countUp();
           })}
         />
       </div>
     );
   };
 
+  const Sample = () => {
+    const a = 1;
+    let num = 0;
+    const sampleFunc555 = useCallback(() => {
+      return ++num;
+    }, [a]);
+    const con = () => {
+      const number = sampleFunc555();
+      console.log(number);
+    };
+    return (
+      <button
+        onClick={() => {
+          con();
+        }}
+      >
+        サンプル
+      </button>
+    );
+  };
+
   return (
     <div>
+      <Sample />
       <div>{array.join(', ')}</div>
       <input ref={textRef} type="text" />
       <button type="button" onClick={() => addArray(textRef.current.value)}>
