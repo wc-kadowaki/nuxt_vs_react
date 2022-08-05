@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useRef, useEffect, createContext, useReducer, useCallback } from 'react';
 import ReactTest from './components/reactTest';
 import { weatherCode } from '@scripts/weather-code';
+import Counter from './components/Counter';
 
 export const UserContext = createContext();
 
@@ -271,6 +272,7 @@ const App = () => {
       <div>{loadingElement}</div>
       <div>{weatherState}</div>
       <Parent />
+      <Counter />
       <div className="observer" style={{ margin: '1000px 0' }}>
         この要素
       </div>
