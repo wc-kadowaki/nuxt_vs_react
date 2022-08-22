@@ -24,15 +24,15 @@ const App = () => {
   const double = () => {
     let i = 2;
 
-    setCount(count + i)
+    setCount(count + i);
 
-    const temp = count
-    console.log(temp)
+    const temp = count;
+    console.log(temp);
 
-    return temp
-  }
+    return temp;
+  };
 
-  console.log(count99)
+  console.log(count99);
 
   // const testTemp = double(count);
 
@@ -191,8 +191,9 @@ const App = () => {
   // React.memoで子コンポーネントをメモ化した際にpropsで関数を引数にする場合渡す関数にuseCallbackを使用しないと
   // 親コンポーネントが再レンダリングされた際に同じ処理でも別の関数と判定されてしまうため子コンポーネントでReact.memoを使用していても際レンダリングされてしまう
   // これって関数だけなのか？propsで変数を渡して見た場合も際レンダリングされるのか？
-
   const Child = React.memo(({ buttonClick }) => {
+    console.log('子コンポーネント');
+
     return (
       <div>
         <div>子コンポーネント</div>
@@ -208,6 +209,7 @@ const App = () => {
   });
 
   const Child2 = React.memo(({ buttonClick }) => {
+    console.log('子コンポーネント2');
     return (
       <div>
         <div>子コンポーネント2</div>
@@ -221,12 +223,17 @@ const App = () => {
   });
 
   const Parent = () => {
-    const test = 1
+    const test = 1;
     const [renderCountState, setRenderCount] = useState(0);
     const countUp = () => {
       console.log('countUp');
       setRenderCount(renderCountState + 1);
     };
+    const hoge = 1;
+    const hoge2 = 2;
+    const sampleFunc = useCallback(() => {
+      console.log(hoge + hoge2);
+    }, [hoge, hoge2]);
     // buttonClickの引数countUpだけでいいと思ったら何故かループ入る、、
     return (
       <div>
@@ -235,19 +242,41 @@ const App = () => {
         <Child
           buttonClick={useCallback(() => {
             countUp();
-          },[test])}
+          }, [test])}
         />
         <Child2
           buttonClick={useCallback(() => {
-            console.log('test');
+            countUp();
           })}
         />
       </div>
     );
   };
 
+  const Sample = () => {
+    const a = 1;
+    let num = 0;
+    const sampleFunc555 = useCallback(() => {
+      return ++num;
+    }, [a]);
+    const con = () => {
+      const number = sampleFunc555();
+      console.log(number);
+    };
+    return (
+      <button
+        onClick={() => {
+          con();
+        }}
+      >
+        サンプル
+      </button>
+    );
+  };
+
   return (
     <div>
+      <Sample />
       <div>{array.join(', ')}</div>
       <input ref={textRef} type="text" />
       <button type="button" onClick={() => addArray(textRef.current.value)}>
