@@ -9,6 +9,7 @@ export const UserContext = createContext();
 const App = () => {
   //useState
   const [count, setCount] = useState(0);
+  const [count99, setCount99] = useState(0);
   const [array, setArray] = useState(['dog', 'cat']);
   const [FizzBuzz, setFizzBuzz] = useState('FizzBuzz Counter');
 
@@ -19,6 +20,21 @@ const App = () => {
     rootMargin: '0px',
     threshold: 0,
   };
+
+  const double = () => {
+    let i = 2;
+
+    setCount(count + i)
+
+    const temp = count
+    console.log(temp)
+
+    return temp
+  }
+
+  console.log(count99)
+
+  // const testTemp = double(count);
 
   useEffect(() => {}, [target]);
 
@@ -165,7 +181,6 @@ const App = () => {
   const [weatherState, setWeatherElement] = useState(weatherData);
   useEffect(() => {
     setWeatherElement(weatherData());
-    console.log(dataState);
   }, [dataState]);
 
   // useCallback, useMemo, React.memo
@@ -178,29 +193,38 @@ const App = () => {
   // これって関数だけなのか？propsで変数を渡して見た場合も際レンダリングされるのか？
 
   const Child = React.memo(({ buttonClick }) => {
-    console.log('子コンポーネント');
     return (
       <div>
         <div>子コンポーネント</div>
-        <button onClick={buttonClick}>ボタン</button>
+        <button
+          onClick={() => {
+            buttonClick();
+          }}
+        >
+          ボタン
+        </button>
       </div>
     );
   });
 
   const Child2 = React.memo(({ buttonClick }) => {
-    console.log('子コンポーネント2');
     return (
       <div>
         <div>子コンポーネント2</div>
-        <button onClick={buttonClick}></button>
+        <button
+          onClick={() => {
+            buttonClick();
+          }}
+        ></button>
       </div>
     );
   });
 
   const Parent = () => {
-    console.log('親コンポーネント');
+    const test = 1
     const [renderCountState, setRenderCount] = useState(0);
     const countUp = () => {
+      console.log('countUp');
       setRenderCount(renderCountState + 1);
     };
     // buttonClickの引数countUpだけでいいと思ったら何故かループ入る、、
@@ -211,7 +235,7 @@ const App = () => {
         <Child
           buttonClick={useCallback(() => {
             countUp();
-          })}
+          },[test])}
         />
         <Child2
           buttonClick={useCallback(() => {
@@ -234,9 +258,10 @@ const App = () => {
       </button>
       <div>
         {/* count++がダメな理由はcountの値を変更する場合はsetCountを使用して変更する必要がありcount++の場合はsetCountの関数によってではなく++の再代入によって変数を変更しようとしたため */}
-        <button onClick={() => setCount(count + 1)}>カウントアップ</button>
+        <button onClick={() => double()}>カウントアップ</button>
+        <button onClick={() => setCount99(count99 + 1)}>カウントアップ99</button>
       </div>
-      <div>{count}</div>
+      <div>{double}</div>
       <div>{FizzBuzz}</div>
       <div>
         <UserContext.Provider value={user}>
